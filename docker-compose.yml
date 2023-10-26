@@ -1,0 +1,23 @@
+version: '3.3'
+services:
+
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - ${BACKEND_PORT}:${BACKEND_PORT}
+    volumes:
+      - ./files:/usr/src/app/files:ro
+
+  frontend:
+    build:
+      context: ./frontend
+    environment:
+      - BASE_URL=sccon.ssi.eecc.de
+      - NODE_ENV=production
+    ports:
+      - "${FRONTEND_PORT}:80"
+    restart: unless-stopped
