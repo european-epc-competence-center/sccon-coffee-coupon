@@ -8,7 +8,6 @@ import router from './router'
 import Toast, { POSITION } from 'vue-toastification';
 // Import the CSS or use your own!
 import 'vue-toastification/dist/index.css';
-axios.defaults.withCredentials = true;
 
 const toastOptions = {
     timeout: 5000,

@@ -20,7 +20,10 @@ expressJSDocSwagger(app)(swaggerOptions);
 
 app.use(bodyParser.json({ limit: '4mb' }))
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:10100'
+}));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ limit: '4mb', extended: true }));
 

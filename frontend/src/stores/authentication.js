@@ -5,11 +5,13 @@ import axios from 'axios'
 
 export const authenticationStore = defineStore('authentication', () => {
 
-  const ENDPOINT = 'https://sccon.ssi.eecc.de/api'
+  const ENDPOINT = 'http://localhost:3000/api'
 
   const toast = useToast()
 
   const offer = ref()
+
+  const presentationRequest = ref()
 
 
   function $reset() {
@@ -19,19 +21,19 @@ export const authenticationStore = defineStore('authentication', () => {
 
   async function getOffer() {
     try {
-      const res = await axios.get(ENDPOINT + '/offer')
+      const res = await axios.get(ENDPOINT + '/request/offer')
       if (res.status === 201 && authProducts.value.length == res.data.length) toast.info('Dupilcate authentication. This credential was already presented!')
       offer.value = res.data
     } catch (error) {
-      console.log(error)
+      if (!error.response || error.response.status != 404) console.log(error)
     }
 
   }
 
   async function getPresentationRequest() {
-    const res = await axios.get(ENDPOINT + '/presentation', { params: { productid }, withCredentials: true })
-    authRequest.value = res.data
+    const res = await axios.get(ENDPOINT + '/request/presentation')
+    presentationRequest.value = res.data
   }
 
-  return { $reset, offer, ENDPOINT, getPresentationRequest, getOffer }
+  return { $reset, offer, presentationRequest, ENDPOINT, getPresentationRequest, getOffer }
 })

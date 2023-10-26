@@ -36,7 +36,7 @@ export class RequestRoutes {
                 "type": "array",
                 "contains": {
                     "type": "string",
-                    "const": "EECCAccessCredential"
+                    "const": "VerifiableCredential"
                 }
             }
         }]
