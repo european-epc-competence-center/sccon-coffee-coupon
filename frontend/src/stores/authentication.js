@@ -45,5 +45,5 @@ export const authenticationStore = defineStore('authentication', () => {
     challenge.value = presentationRequest.value.split('/').at(-1)
   }
 
-  return { $reset, offer, presentationRequest, ENDPOINT, getPresentationRequest, getOffer }
+  return { $reset, offer, credentials, presentationRequest, ENDPOINT, getPresentationRequest, getOffer }
 })
