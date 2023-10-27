@@ -1,5 +1,5 @@
 <template>
-    <div class="container container-lg h-100">
+    <div class="container container-lg h-100 pt-5">
         <div class="row justify-content-center align-items-center">
             <div v-if="offer" class="col-12 m-3 text-center">
                 <h2>Claim your Coupon credential!</h2>
@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div v-else class="col-12 m-3 text-center">
-                <h2>Show present your data to get a sweet coffe coupon!</h2>
+                <h2>Present your data credentials to get a sweet coffe coupon!</h2>
             </div>
             <div class="col-12 m-3 text-center">
                 <div>
@@ -24,7 +24,7 @@
                     <div class="row">
                         <div class="col-12 mt-3 text-muted">
                             <small>Using the <strong>{{ offer ? 'OpenID4VCI' : 'OpenID4VP' }}</strong>
-                                protocol</small>
+                                protocol with</small>
                         </div>
                         <div class="col-12">
                             <a href="https://hidy.eu" target="_blank">

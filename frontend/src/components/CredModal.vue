@@ -4,10 +4,10 @@
         <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
             <div class="modal-content bg-light">
                 <div class="modal-header">
-                    <h1 class="modal-title px-3">Authentication</h1>
+                    <h1 class="modal-title px-3">Your presentation</h1>
                     <button type="button" class="btn-close btn-lg me-3" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body text-center">
+                <div class="modal-body text-center p-3">
                     {{ credentials }}
                 </div>
             </div>
