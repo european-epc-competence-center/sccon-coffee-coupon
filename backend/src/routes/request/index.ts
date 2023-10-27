@@ -139,8 +139,35 @@ export class RequestRoutes {
 
         if (!issuers.every((iss: string) => allowedIssuers.includes(iss))) return res.status(StatusCodes.UNAUTHORIZED).send('Access credential issued by unauthorized issuer!')
 
-        // TODO request offer
-        const offer = 'testoffer';
+        const offerRequest = {
+            "@context": [
+                "https://www.w3.org/2018/credentials/v1",
+                "https://ssi.eecc.de/api/registry/context/test/coupon"
+            ],
+            "type": [
+                "VerifiableCredential",
+                "CouponCredential"
+            ],
+            "credentialSubject": {
+                "discount": "0.25"
+            },
+            "options": {
+                "verificationMethod": "did:web:demo.ssi.eecc.de#z6MkjVgzQ5a1saFRR3GLXxBgKxZKuYvhpWvUUjRp2DswJGjD",
+                "status": ["revocation"]
+            }
+        }
+
+        const apiOffer = await fetch('https://ssi.eecc.de/api/controller/credentials/offer', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + process.env.DID_CONTROLLER_API_TOKEN,
+                'Accept': 'text/html',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(offerRequest)
+        })
+
+        const offer = await apiOffer.text()
 
         offers.set(req.params.challenge, offer)
 
