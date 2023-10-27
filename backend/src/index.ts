@@ -21,7 +21,7 @@ expressJSDocSwagger(app)(swaggerOptions);
 app.use(bodyParser.json({ limit: '4mb' }))
 
 app.use(cors({
-    origin: 'http://localhost:10100'
+    origin: 'https://sccon.ssi.eecc.de'
 }));
 
 app.use(express.urlencoded({ extended: true }));

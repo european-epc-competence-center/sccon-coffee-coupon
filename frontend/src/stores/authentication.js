@@ -5,7 +5,7 @@ import axios from 'axios'
 
 export const authenticationStore = defineStore('authentication', () => {
 
-  const ENDPOINT = 'http://localhost:3000/api'
+  const ENDPOINT = 'https://sccon.ssi.eecc.de/api'
 
   const toast = useToast()
 
