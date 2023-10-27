@@ -1,16 +1,16 @@
 <template>
     <div class="container container-lg h-100">
         <div class="row justify-content-center align-items-center">
-            <div v-if="offer" class="col-12 m-5 text-center">
+            <div v-if="offer" class="col-12 m-3 text-center">
                 <h2>Claim your Coupon credential!</h2>
-                <button @click="authStore.$reset()" class="btn btn-lg text-white btn-primary">
+                <button @click="authStore.$reset()" class="btn btn-lg text-white btn-primary mt-3">
                     Retry <i class="bi bi-arrow-repeat"></i>
                 </button>
             </div>
-            <div v-else class="col-12 m-5 text-center">
+            <div v-else class="col-12 m-3 text-center">
                 <h2>Show present your data to get a sweet coffe coupon!</h2>
             </div>
-            <div class="col-12 m-5 text-center">
+            <div class="col-12 m-3 text-center">
                 <div>
                     <qrcode-vue v-if="offer || presentationRequest" :value="offer || presentationRequest" :margin="1"
                         :size="500" level="M" class="my-3 shadow" id="presentation-request-canvas" />
@@ -38,6 +38,7 @@
             </div>
         </div>
     </div>
+    <CredModal />
 </template>
 
 <script setup>
@@ -45,6 +46,8 @@ import { ref, onMounted, watch, computed, onBeforeUnmount } from 'vue'
 import { authenticationStore } from '@/stores/authentication'
 import QrcodeVue from 'qrcode.vue'
 import { useToast } from 'vue-toastification'
+import { Modal } from 'bootstrap'
+import CredModal from '@/components/CredModal.vue'
 
 const authStore = authenticationStore()
 
@@ -92,9 +95,8 @@ watch(offer, async (currentValue, oldValue) => {
 })
 
 watch(credentials, (currentValue, oldValue) => {
-    console.log(currentValue)
     if (currentValue.length > 0) {
-        console.log(currentValue)
+        Modal.getOrCreateInstance(document.getElementById('credModal')).show()
         toast.success(`Successfully presented ${currentValue.length} credentials!`)
     }
 })
