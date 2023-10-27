@@ -15,11 +15,14 @@ export const authenticationStore = defineStore('authentication', () => {
 
   const challenge = ref()
 
+  const credentials = ref([])
+
 
   function $reset() {
     offer.value = undefined
     presentationRequest.value = undefined
     challenge.value = undefined
+    credentials.value = undefined
   }
 
 
@@ -28,7 +31,8 @@ export const authenticationStore = defineStore('authentication', () => {
       if (!presentationRequest.value || !challenge.value) await getPresentationRequest()
       const res = await axios.get(ENDPOINT + '/request/offer/' + challenge.value)
       if (res.status === 201 && authProducts.value.length == res.data.length) toast.info('Dupilcate authentication. This credential was already presented!')
-      offer.value = res.data
+      offer.value = res.data.offer
+      credentials.value = res.data.credentials
     } catch (error) {
       if (!error.response || error.response.status != 404) console.log(error)
     }

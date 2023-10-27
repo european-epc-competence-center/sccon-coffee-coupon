@@ -60,6 +60,10 @@ onBeforeUnmount(() => {
     if (intervalId.value) clearInterval(intervalId.value)
 })
 
+const credentials = computed(() => {
+    return authStore.credentials
+})
+
 const offer = computed(() => {
     return authStore.offer
 })
@@ -80,8 +84,18 @@ async function startQueryOffer() {
 }
 
 watch(offer, async (currentValue, oldValue) => {
-    if (currentValue) stopQueryOffer()
+    if (currentValue) {
+        stopQueryOffer()
+        toast.success('Received credential offer!')
+    }
     else await startQueryOffer()
+})
+
+watch(credentials, async (currentValue, oldValue) => {
+    if (currentValue.length > 0) {
+        console.log(currentValue)
+        toast.success(`Successfully presented ${currentValue.length} credentials!`)
+    }
 })
 
 </script>

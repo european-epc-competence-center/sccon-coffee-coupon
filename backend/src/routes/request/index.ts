@@ -6,7 +6,7 @@ import { randomUUID } from 'crypto'
 
 const presentationRequests: Map<string, any> = new Map();
 
-const offers: Map<string, string> = new Map();
+const offers: Map<string, any> = new Map();
 
 
 const allowedIssuers = ['did:web:ssi.eecc.de', 'did:web:eecc.de', 'did:web:demo.ssi.eecc.de']
@@ -126,7 +126,7 @@ export class RequestRoutes {
         const credentials = Array.isArray(presentation.verifiableCredential) ? presentation.verifiableCredential : [presentation.verifiableCredential]
 
         // check credential type
-        if (!credentials.every((c: any) => c.type.includes('EECCAccessCredential'))) return res.status(StatusCodes.UNAUTHORIZED).send('Only EECCAccessCredentials are allowed!')
+        // if (!credentials.every((c: any) => c.type.includes('EECCAccessCredential'))) return res.status(StatusCodes.UNAUTHORIZED).send('Only EECCAccessCredentials are allowed!')
 
         const proofs = Array.isArray(presentation.proof) ? presentation.proof : [presentation.proof]
         const presenter = proofs.map((p: any) => p.verificationMethod.split('#')[0])
@@ -137,7 +137,7 @@ export class RequestRoutes {
         // check issuer
         const issuers = credentials.map((c: any) => c.issuer.id || c.issuer)
 
-        if (!issuers.every((iss: string) => allowedIssuers.includes(iss))) return res.status(StatusCodes.UNAUTHORIZED).send('Access credential issued by unauthorized issuer!')
+        // if (!issuers.every((iss: string) => allowedIssuers.includes(iss))) return res.status(StatusCodes.UNAUTHORIZED).send('Access credential issued by unauthorized issuer!')
 
         const offerRequest = {
             "@context": [
@@ -169,7 +169,7 @@ export class RequestRoutes {
 
         const offer = await apiOffer.text()
 
-        offers.set(req.params.challenge, offer)
+        offers.set(req.params.challenge, { offer, credentials })
 
         presentationRequests.delete(req.params.challenge)
 
