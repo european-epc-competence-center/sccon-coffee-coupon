@@ -91,7 +91,8 @@ watch(offer, async (currentValue, oldValue) => {
     else await startQueryOffer()
 })
 
-watch(credentials, async (currentValue, oldValue) => {
+watch(credentials, (currentValue, oldValue) => {
+    console.log(currentValue)
     if (currentValue.length > 0) {
         console.log(currentValue)
         toast.success(`Successfully presented ${currentValue.length} credentials!`)
