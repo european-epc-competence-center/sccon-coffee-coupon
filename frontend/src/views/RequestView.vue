@@ -1,12 +1,18 @@
 <template>
     <div class="container container-lg h-100">
         <div class="row justify-content-center align-items-center">
-            <div class="col-12 m-5 text-center">
+            <div v-if="offer" class="col-12 m-5 text-center">
+                <h2>Claim your Coupon credential!</h2>
+                <button @click="authStore.$reset()" class="btn btn-lg text-white btn-primary">
+                    Retry <i class="bi bi-arrow-repeat"></i>
+                </button>
+            </div>
+            <div v-else class="col-12 m-5 text-center">
                 <h2>Show present your data to get a sweet coffe coupon!</h2>
             </div>
             <div class="col-12 m-5 text-center">
                 <div>
-                    <qrcode-vue v-if="authStore.presentationRequest" :value="authStore.presentationRequest" :margin="1"
+                    <qrcode-vue v-if="offer || presentationRequest" :value="offer || presentationRequest" :margin="1"
                         :size="500" level="M" class="my-3 shadow" id="presentation-request-canvas" />
                     <div v-else class="my-3" style="min-height: 500px;">
                         <p class="p-5 m-0 text-muted">Requesting presentation challenge</p>
@@ -17,7 +23,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12 mt-3 text-muted">
-                            <small>Using the <strong>OpenID4VP</strong>
+                            <small>Using the <strong>{{ offer ? 'OpenID4VCI' : 'OpenID4VP' }}</strong>
                                 protocol</small>
                         </div>
                         <div class="col-12">
@@ -47,11 +53,7 @@ const toast = useToast()
 const intervalId = ref()
 
 onMounted(async () => {
-
-    await authStore.getPresentationRequest()
-    if (intervalId.value) clearInterval(intervalId.value);
-    intervalId.value = setInterval(authStore.getOffer, 3000);
-
+    await startQueryOffer()
 })
 
 onBeforeUnmount(() => {
@@ -62,11 +64,24 @@ const offer = computed(() => {
     return authStore.offer
 })
 
+const presentationRequest = computed(() => {
+    return authStore.presentationRequest
+})
 
-watch(offer, (currentValue, oldValue) => {
+function stopQueryOffer() {
     if (intervalId.value) clearInterval(intervalId.value)
-    console.log(currentValue)
-    // push to offer view
+    intervalId.value = undefined
+}
+
+async function startQueryOffer() {
+    await authStore.getPresentationRequest()
+    stopQueryOffer()
+    intervalId.value = setInterval(authStore.getOffer, 3000);
+}
+
+watch(offer, async (currentValue, oldValue) => {
+    if (currentValue) stopQueryOffer()
+    else await startQueryOffer()
 })
 
 </script>
