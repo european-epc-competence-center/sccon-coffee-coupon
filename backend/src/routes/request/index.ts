@@ -28,31 +28,34 @@ export class RequestRoutes {
             return res.sendStatus(StatusCodes.NOT_FOUND)
         }
 
-        let fields = [{
-            "path": [
-                "$.type"
-            ],
-            "filter": {
-                "type": "array",
-                "contains": {
-                    "type": "string",
-                    "const": "VerifiableCredential"
+        const input_descriptors = ['VerifiableCredential'].map((credentialType: string) => {
+            return {
+                "id": "sccon_request_" + challenge + "_" + credentialType,
+                "format": {
+                    "ldp_vc": {
+                        "proof_type": [
+                            "Ed25519Signature2018",
+                            "Ed25519Signature2020"
+                        ]
+                    }
+                },
+                "constraints": {
+                    "fields": [{
+                        "path": [
+                            "$.type"
+                        ],
+                        "filter": {
+                            "type": "array",
+                            "contains": {
+                                "type": "string",
+                                "const": credentialType
+                            }
+                        }
+                    }]
                 }
             }
-        }]
+        })
 
-        /*if (req.query.productid) {
-            fields.push({
-                "path": [
-                    "$.credentialSubject.product_id"
-                ],
-                "filter": {
-                    "type": "string",
-                    // @ts-ignore
-                    "const": req.query.productid
-                }
-            })
-        }*/
 
         const presentationRequest = {
             "nonce": challenge,
@@ -61,23 +64,8 @@ export class RequestRoutes {
             "client_id": "https://sccon.ssi.eecc.de/api/request/presentation/" + challenge,
             "response_uri": "https://sccon.ssi.eecc.de/api/request/presentation/" + challenge,
             "presentation_definition": {
-                "id": "eecc_viewer_request_" + challenge,
-                "input_descriptors": [
-                    {
-                        "id": "eecc_viewer_request_" + challenge + "_EECCAccessCredential",
-                        "format": {
-                            "ldp_vc": {
-                                "proof_type": [
-                                    "Ed25519Signature2018",
-                                    "Ed25519Signature2020"
-                                ]
-                            }
-                        },
-                        "constraints": {
-                            "fields": fields
-                        }
-                    }
-                ]
+                "id": "sccon_request_" + challenge,
+                "input_descriptors": input_descriptors
             }
         }
 
