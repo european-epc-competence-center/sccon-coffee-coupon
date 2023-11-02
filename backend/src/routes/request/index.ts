@@ -145,6 +145,8 @@ export class RequestRoutes {
 
         const presentation = typeof req.body.vp_token === 'string' ? JSON.parse(req.body.vp_token) : req.body.vp_token;
 
+        console.log(JSON.stringify(presentation, null, 2))
+
         // check validity
         const verifierResult = await fetch('https://ssi.eecc.de/api/verifier?challenge=' + req.params.challenge, {
             method: "post",
