@@ -145,7 +145,7 @@ export class RequestRoutes {
 
         const presentation = typeof req.body.vp_token === 'string' ? JSON.parse(req.body.vp_token) : req.body.vp_token;
 
-        console.log(JSON.stringify(presentation, null, 2))
+        console.log("New presentation:\n" + JSON.stringify(presentation, null, 2))
 
         // check validity
         const verifierResult = await fetch('https://ssi.eecc.de/api/verifier?challenge=' + req.params.challenge, {
@@ -162,7 +162,7 @@ export class RequestRoutes {
         const credentials = Array.isArray(presentation.verifiableCredential) ? presentation.verifiableCredential : [presentation.verifiableCredential]
 
         // check credential type
-        // if (!credentials.every((c: any) => c.type.includes('EECCAccessCredential'))) return res.status(StatusCodes.UNAUTHORIZED).send('Only EECCAccessCredentials are allowed!')
+        if (!credentials.every((c: any) => c.type.includes('SelfIssuedCredential'))) return res.status(StatusCodes.UNAUTHORIZED).send('Only SelfIssuedCredentials are allowed!')
 
         const proofs = Array.isArray(presentation.proof) ? presentation.proof : [presentation.proof]
         const presenter = proofs.map((p: any) => p.verificationMethod.split('#')[0])
@@ -177,6 +177,11 @@ export class RequestRoutes {
 
 
         // calculate discount based on presentation
+        const selfIssuedPresentation = Object.assign({}, credentials.map((c: any) => c.credentialSubject))
+        const discount: number = Object.keys(selfIssuanceProperties)
+            .filter((p: string) => selfIssuedPresentation[p] && selfIssuedPresentation[p] != null)
+            .map((p: string) => parseFloat(selfIssuedPresentation[p].discount))
+            .reduce((product: number, value: number) => product * (1 - value), 1.0)
 
         const offerRequest = {
             "@context": [
@@ -188,7 +193,7 @@ export class RequestRoutes {
                 "CouponCredential"
             ],
             "credentialSubject": {
-                "discount": "0.25"
+                "discount": "" + (1.0 - discount).toFixed(2)
             },
             "options": {
                 "verificationMethod": "did:web:demo.ssi.eecc.de#z6MkjVgzQ5a1saFRR3GLXxBgKxZKuYvhpWvUUjRp2DswJGjD",
