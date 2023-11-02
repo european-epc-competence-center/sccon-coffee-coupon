@@ -11,6 +11,27 @@ const offers: Map<string, any> = new Map();
 
 const allowedIssuers = ['did:web:ssi.eecc.de', 'did:web:eecc.de', 'did:web:demo.ssi.eecc.de']
 
+const selfIssuanceProperties: any = {
+    "givenName": {
+        "type": "string",
+        "title": "Vorname",
+        "required": true,
+        "discount": 0.1
+    },
+    "familyName": {
+        "type": "string",
+        "title": "Nachname",
+        "required": true,
+        "discount": 0.1
+    },
+    "age": {
+        "type": "integer",
+        "title": "Alter",
+        "required": true,
+        "discount": 0.2
+    }
+}
+
 export class RequestRoutes {
 
     request = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
@@ -66,25 +87,11 @@ export class RequestRoutes {
                         ],
                         "filter": {
                             "type": "object",
-                            "properties": {
-                                "givenName": {
-                                    "type": "string",
-                                    "title": "Vorname"
-                                },
-                                "familyName": {
-                                    "type": "string",
-                                    "title": "Nachname"
-                                },
-                                "age": {
-                                    "type": "integer",
-                                    "title": "Alter"
-                                }
-                            },
-                            "required": [
-                                "givenName",
-                                "familyName",
-                                "age"
-                            ]
+                            "properties": Object.fromEntries(
+                                Object.keys(selfIssuanceProperties).map(key => {
+                                    return [key, Object.fromEntries(['type', 'title'].map((k) => [k, selfIssuanceProperties[key][k]]))];
+                                })),
+                            "required": Object.keys(selfIssuanceProperties).filter(k => selfIssuanceProperties[k].required)
                         }
                     }
                 ],
@@ -165,6 +172,9 @@ export class RequestRoutes {
         const issuers = credentials.map((c: any) => c.issuer.id || c.issuer)
 
         // if (!issuers.every((iss: string) => allowedIssuers.includes(iss))) return res.status(StatusCodes.UNAUTHORIZED).send('Access credential issued by unauthorized issuer!')
+
+
+        // calculate discount based on presentation
 
         const offerRequest = {
             "@context": [
