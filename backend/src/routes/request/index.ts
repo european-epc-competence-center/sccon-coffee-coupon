@@ -56,6 +56,45 @@ export class RequestRoutes {
             }
         })
 
+        const selfIssuedDescriptor = {
+            "id": "4ea5dd4e-5fe0-4a37-889c-a5c0cd713f20",
+            "constraints": {
+                "fields": [
+                    {
+                        "path": [
+                            "$.credentialSubject"
+                        ],
+                        "filter": {
+                            "type": "object",
+                            "properties": {
+                                "givenName": {
+                                    "type": "string",
+                                    "title": "Vorname"
+                                },
+                                "familyName": {
+                                    "type": "string",
+                                    "title": "Nachname"
+                                },
+                                "age": {
+                                    "type": "integer",
+                                    "title": "Alter"
+                                }
+                            },
+                            "required": [
+                                "givenName",
+                                "familyName",
+                                "age"
+                            ]
+                        }
+                    }
+                ],
+                "subject_is_issuer": "preferred"
+            },
+            "group": [
+                "A"
+            ]
+        }
+
 
         const presentationRequest = {
             "nonce": challenge,
@@ -65,7 +104,7 @@ export class RequestRoutes {
             "response_uri": "https://sccon.ssi.eecc.de/api/request/presentation/" + challenge,
             "presentation_definition": {
                 "id": "sccon_request_" + challenge,
-                "input_descriptors": input_descriptors
+                "input_descriptors": input_descriptors.concat([selfIssuedDescriptor as any])
             }
         }
 
