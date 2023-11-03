@@ -21,13 +21,13 @@ const selfIssuanceProperties: any = {
     "familyName": {
         "type": "string",
         "title": "Nachname",
-        "required": true,
+        "required": false,
         "discount": 0.1
     },
     "age": {
         "type": "integer",
         "title": "Alter",
-        "required": true,
+        "required": false,
         "discount": 0.2
     }
 }
