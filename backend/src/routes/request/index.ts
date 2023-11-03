@@ -175,15 +175,15 @@ export class RequestRoutes {
 
         // if (!issuers.every((iss: string) => allowedIssuers.includes(iss))) return res.status(StatusCodes.UNAUTHORIZED).send('Access credential issued by unauthorized issuer!')
 
-
         // calculate discount based on presentation
         const selfIssuedPresentation = Object.assign({}, credentials.map((c: any) => c.credentialSubject))
+        console.log('Presentation: ' + selfIssuedPresentation)
         const discount: number = Object.keys(selfIssuanceProperties)
             .filter((p: string) => selfIssuedPresentation[p] && selfIssuedPresentation[p] != null)
-            .map((p: string) => parseFloat(selfIssuedPresentation[p].discount))
+            .map((p: string) => parseFloat(selfIssuanceProperties[p].discount))
             .reduce((product: number, value: number) => product * (1 - value), 1.0)
 
-        console.log(discount)
+        console.log('Discount: ' + discount)
 
         const offerRequest = {
             "@context": [
@@ -195,7 +195,7 @@ export class RequestRoutes {
                 "CouponCredential"
             ],
             "credentialSubject": {
-                "discount": "0.25"// + (1.0 - discount).toFixed(2)
+                "discount": "" + (1.0 - discount).toFixed(2)
             },
             "options": {
                 "verificationMethod": "did:web:demo.ssi.eecc.de#z6MkjVgzQ5a1saFRR3GLXxBgKxZKuYvhpWvUUjRp2DswJGjD",
