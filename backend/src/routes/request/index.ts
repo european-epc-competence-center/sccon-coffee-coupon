@@ -95,7 +95,7 @@ export class RequestRoutes {
                         }
                     }
                 ],
-                "subject_is_issuer": "preferred"
+                "subject_is_issuer": "required"
             },
             "group": [
                 "A"
