@@ -48,7 +48,7 @@ const credentials = computed(() => {
 })
 
 function getCredId(cred) {
-    return cred.id.split('/').at(-1)
+    return cred.id ? cred.id.split('/').at(-1) : JSON.stringify(cred).split(']').at(-2)
 }
 
 </script>
