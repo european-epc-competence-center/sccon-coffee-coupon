@@ -49,7 +49,7 @@ export class RequestRoutes {
             return res.sendStatus(StatusCodes.NOT_FOUND)
         }
 
-        const input_descriptors = ['VerifiableCredential'].map((credentialType: string) => {
+        const input_descriptors: any[] = []/*['VerifiableCredential'].map((credentialType: string) => {
             return {
                 "id": "sccon_request_" + challenge + "_" + credentialType,
                 "format": {
@@ -75,7 +75,7 @@ export class RequestRoutes {
                     }]
                 }
             }
-        })
+        })*/
 
         const selfIssuedDescriptor = {
             "id": "4ea5dd4e-5fe0-4a37-889c-a5c0cd713f20",
