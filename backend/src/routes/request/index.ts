@@ -177,7 +177,10 @@ export class RequestRoutes {
 
         // calculate discount based on presentation
         const selfIssuedPresentation = Object.assign({}, credentials.map((c: any) => c.credentialSubject))
-        console.log('Presentation: ' + selfIssuedPresentation)
+        console.log('Presentation: ' + JSON.stringify(selfIssuedPresentation, null, 2))
+        console.log('Discounts: ' + JSON.stringify(Object.keys(selfIssuanceProperties)
+            .filter((p: string) => selfIssuedPresentation[p] && selfIssuedPresentation[p] != null)
+            .map((p: string) => parseFloat(selfIssuanceProperties[p].discount)), null, 2))
         const discount: number = Object.keys(selfIssuanceProperties)
             .filter((p: string) => selfIssuedPresentation[p] && selfIssuedPresentation[p] != null)
             .map((p: string) => parseFloat(selfIssuanceProperties[p].discount))
