@@ -16,19 +16,31 @@ const selfIssuanceProperties: any = {
         "type": "string",
         "title": "Vorname",
         "required": true,
-        "discount": 0.1
+        "discount": 0.05
     },
     "familyName": {
         "type": "string",
         "title": "Nachname",
         "required": false,
-        "discount": 0.1
+        "discount": 0.05
     },
     "age": {
         "type": "integer",
         "title": "Alter",
         "required": false,
-        "discount": 0.2
+        "discount": 0.15
+    },
+    "address": {
+        "type": "string",
+        "title": "Wohnort",
+        "required": false,
+        "discount": 0.25
+    },
+    "income": {
+        "type": "integer",
+        "title": "Einkommen",
+        "required": false,
+        "discount": 0.4
     }
 }
 
@@ -178,8 +190,6 @@ export class RequestRoutes {
         // calculate discount based on presentation
         const selfIssuedPresentation = Object.assign({}, ...credentials.map((c: any) => c.credentialSubject))
         console.log('Presentation: ' + JSON.stringify(selfIssuedPresentation, null, 2))
-        console.log('Discounts: ' + JSON.stringify(Object.keys(selfIssuanceProperties)
-            .filter((p: string) => selfIssuedPresentation[p] && selfIssuedPresentation[p] != null)))
         const discount: number = Object.keys(selfIssuanceProperties)
             .filter((p: string) => selfIssuedPresentation[p] && selfIssuedPresentation[p] != null)
             .map((p: string) => parseFloat(selfIssuanceProperties[p].discount))
