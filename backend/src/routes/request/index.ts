@@ -176,11 +176,10 @@ export class RequestRoutes {
         // if (!issuers.every((iss: string) => allowedIssuers.includes(iss))) return res.status(StatusCodes.UNAUTHORIZED).send('Access credential issued by unauthorized issuer!')
 
         // calculate discount based on presentation
-        const selfIssuedPresentation = Object.assign({}, credentials.map((c: any) => c.credentialSubject))
+        const selfIssuedPresentation = Object.assign({}, ...credentials.map((c: any) => c.credentialSubject))
         console.log('Presentation: ' + JSON.stringify(selfIssuedPresentation, null, 2))
         console.log('Discounts: ' + JSON.stringify(Object.keys(selfIssuanceProperties)
-            .filter((p: string) => selfIssuedPresentation[p] && selfIssuedPresentation[p] != null)
-            .map((p: string) => parseFloat(selfIssuanceProperties[p].discount)), null, 2))
+            .filter((p: string) => selfIssuedPresentation[p] && selfIssuedPresentation[p] != null)))
         const discount: number = Object.keys(selfIssuanceProperties)
             .filter((p: string) => selfIssuedPresentation[p] && selfIssuedPresentation[p] != null)
             .map((p: string) => parseFloat(selfIssuanceProperties[p].discount))
